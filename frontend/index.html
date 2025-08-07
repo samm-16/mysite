@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="studentApp">
+<head>
+  <title>Student Form</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+</head>
+<body ng-controller="StudentController">
+
+  <h2>Student Form</h2>
+
+  <form ng-submit="submit()" name="studentForm" novalidate>
+    <label>Name:</label><br/>
+    <input type="text" ng-model="student.name" required /><br/><br/>
+
+    <label>Address:</label><br/>
+    <input type="text" ng-model="student.address" required /><br/><br/>
+
+    <label>Student ID:</label><br/>
+    <input type="text" ng-model="student.studentId" required /><br/><br/>
+
+    <label>Student Name:</label><br/>
+    <input type="text" ng-model="student.studentName" required /><br/><br/>
+
+    <label>Marks:</label><br/>
+    <input type="number" ng-model="student.marks" required /><br/><br/>
+
+    <button type="submit" ng-disabled="studentForm.$invalid">Submit</button>
+  </form>
+
+  <script>
+    angular.module('studentApp', [])
+      .controller('StudentController', ['$scope', '$http', function($scope, $http) {
+        $scope.student = {};
+        $scope.submit = function() {
+          if ($scope.studentForm.$valid) {
+            $http.post('http://localhost:3000/submit', $scope.student)
+              .then(() => {
+                alert('Student saved to DB!');
+                $scope.student = {};
+                $scope.studentForm.$setPristine();
+                $scope.studentForm.$setUntouched();
+              })
+              .catch(() => alert('Error saving student'));
+          }
+        };
+      }]);
+  </script>
+
+</body>
+</html>
